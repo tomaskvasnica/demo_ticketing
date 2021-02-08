@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { app } from './app';
 import { errHandler } from '@tk-test-org/tk-test-common';
 const start = async () => {
+    console.log('starting auth service up');
     if (!process.env.JWT_SALT) {
         throw new Error(' JWT_SALT has to be defined, please check / set secret: jwt-secret ');
     }
