@@ -9,7 +9,6 @@ it(' marks order as cancelled', async ()=> {
     const tick = await Ticket.build({id: mid, title:'test title', price: 10}).save();
     const ord = await request(app).post('/api/orders').set('Cookie', global.cookie()).send({ticketId: tick.id}).expect(201);
     const resp = await request(app).delete(`/api/orders/${ord.body.id}`).set('Cookie', global.cookie()).send();
-    console.log(resp.body.status);
     expect(resp.body.status).toEqual('cancelled');
 
 } );

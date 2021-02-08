@@ -7,8 +7,6 @@ import { TicketUpdatedListener } from './events/listeners/ticketUpdListrClass';
 import { OrderExpComplLstn } from './events/listeners/orderExpireComplClass';
 import { PaymentCreatedListener } from './events/listeners/paymCreaLstnr';
 
-console.log('process.env.POD_NAME', process.env.POD_NAME);
-
 const start = async () => {
     if (!process.env.JWT_SALT) {
         throw new Error(' JWT_SALT has to be defined, please check / set secret: jwt-secret ');
@@ -20,7 +18,6 @@ const start = async () => {
         await natsWrapper.wrapConnect('ticketing', process.env.POD_NAME, 'http://nats-svc:4222');
 
         natsWrapper.client.on('connect', () => {
-            console.log('listener connected to nats');
 
             natsWrapper.client.on('close', () => {
                 console.log('NATS connection closed');
@@ -33,10 +30,6 @@ const start = async () => {
             });
             process.on('SIGTERM', () => {
                 console.log('about to call SIGTERM close');
-                natsWrapper.client.close();
-            });
-            process.on('SIGKILL', () => {
-                console.log('about to call SIGKILL close');
                 natsWrapper.client.close();
             });
         });
@@ -57,7 +50,7 @@ const start = async () => {
     app.use(errHandler);
 
     app.listen(4000, () => {
-        console.log('Tickets is listening on 4000 !!!');
+        console.log('Tickets are listening on 4000 !!!');
     });
 };
 
