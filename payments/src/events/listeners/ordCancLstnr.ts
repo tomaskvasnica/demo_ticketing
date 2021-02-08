@@ -11,7 +11,7 @@ export class OrderCancelledListener extends Listener<OrderCancelledEvent> {
         }
         const order = await Order.findOne({ _id: data.id, version: +data.version-1});
         if (!order)  {
-            console.log('[Paynent orderCancelListener] Order not found ');
+            //console.log('[Paynent orderCancelListener] Order not found ');
             throw new Error('[Paynent orderCancelListener] Order not found ');
         }
         order.set({status: OrderStatus.Cancelled});

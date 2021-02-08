@@ -5,7 +5,7 @@ import { natsWrapper } from './natsWrapper';
 import { OrderCancelledListener } from './events/listeners/ordCancLstnr';
 import { OrderCreatedListener } from './events/listeners/ordCreaLstnr';
 
-console.log('process.env.POD_NAME', process.env.POD_NAME);
+//console.log('process.env.POD_NAME', process.env.POD_NAME);
 
 const start = async () => {
     if (!process.env.JWT_SALT) {
