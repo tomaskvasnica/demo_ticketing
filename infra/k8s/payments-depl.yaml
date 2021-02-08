@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: payments-depl
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: payments
+  template:
+    metadata:
+      labels:
+        app: payments
+    spec: 
+      containers:
+        - name: payments
+          image: tomaskvasnica/paymentsvc
+          env: 
+            - name: JWT_SALT
+              valueFrom: 
+                secretKeyRef: 
+                    name: jwt-secret
+                    key: JWT_SALT
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: STRIPE_KEY
+              valueFrom: 
+                secretKeyRef: 
+                    name: stripe-secret
+                    key: STRIPE_KEY
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: payments-svc
+spec:
+  selector:
+    app: payments
+  ports:
+    - name: paymentsport
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

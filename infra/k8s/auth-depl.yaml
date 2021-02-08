@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: auth-depl
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec: 
+      containers:
+        - name: auth
+          image: tomaskvasnica/ticketauth
+          env: 
+            - name: JWT_SALT
+              valueFrom: 
+                secretKeyRef: 
+                    name: jwt-secret
+                    key: JWT_SALT
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: auth-svc
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: authport
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: orders-depl
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: orders
+  template:
+    metadata:
+      labels:
+        app: orders
+    spec: 
+      containers:
+        - name: orders
+          image: tomaskvasnica/orderssvc
+          env: 
+            - name: JWT_SALT
+              valueFrom: 
+                secretKeyRef: 
+                    name: jwt-secret
+                    key: JWT_SALT
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: orders-svc
+spec:
+  selector:
+    app: orders
+  ports:
+    - name: ordersport
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

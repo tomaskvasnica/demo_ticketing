@@ -1,0 +1,59 @@
+# apiVersion: skaffold/v2alpha3
+apiVersion: skaffold/v2beta9
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: tomaskvasnica/ticketauth
+      context: auth
+      docker: 
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: tomaskvasnica/ticketclient
+      context: client
+      docker: 
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: tomaskvasnica/tickets
+      context: tickets
+      docker: 
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: tomaskvasnica/orderssvc
+      context: orders
+      docker: 
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: tomaskvasnica/expireservice
+      context: expiration
+      docker: 
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: tomaskvasnica/paymentsvc
+      context: payments
+      docker: 
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
