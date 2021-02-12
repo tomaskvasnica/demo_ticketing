@@ -1,17 +1,18 @@
 import {natsWrapper} from  '../../../natsWrapper';
-import {OrderCreatedListener} from  '../../listeners/orderCreaLstnr';
+import {OrderCancListener} from  '../orderCancLstnr';
 import {Ticket} from '../../../dbmodel/ticket';
-import {OrderCreatedEvent, OrderStatus} from '@tk-test-org/tk-test-common';
+import {OrderCancelledEvent, OrderStatus} from '@tk-test-org/tk-test-common';
 import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
 
 const setup = async () => {
-    const myListener = new OrderCreatedListener(natsWrapper.client);
+    const myListener = new OrderCancListener(natsWrapper.client);
     const tick = Ticket.build({title: 'fist title', price: 10, userId: '12345'});
+    tick.set({ orderId: mongoose.Types.ObjectId().toHexString() });
     await tick.save();
 
     //create fake data
-    const data:OrderCreatedEvent['data'] = {
+    const data:OrderCancelledEvent['data'] = {
         id: mongoose.Types.ObjectId().toHexString(),
         version: 0,
         userId: '12345',
@@ -31,23 +32,12 @@ const setup = async () => {
     return {myListener, tick, data, msg};
 };
 
-it(' sets order id for ticket ', async () => {
+it(' updates ticket, publishes update and acks nats message  ', async () => {
     const {myListener, tick, data, msg} = await setup();
     await myListener.onMessage(data, msg);
     const myTick = await Ticket.findById(tick.id);
-    expect(myTick.orderId).toEqual(data.id);
-});
-
-it(' acks the message ', async () => {
-    const {myListener, tick, data, msg} = await setup();
-    //console.log('tick.id', tick.id);
-    await myListener.onMessage(data, msg);
+    //expect(myTick.orderId).toEqual(undefined);
+    expect(myTick.orderId).not.toBeDefined();
     expect(msg.ack).toHaveBeenCalled();
-});
-
-it(' publishes ticket updated event ', async ()=> {
-    const {myListener, tick, data, msg} = await setup();
-    await myListener.onMessage(data, msg);
     expect(natsWrapper.client.publish).toHaveBeenCalled();
-    //console.log((natsWrapper.client.publish as jest.Mock).mock.calls);
 });
