@@ -13,7 +13,7 @@ router.post('/api/payments', requireAuth, [
     body('token').not().isEmpty(), body('orderId').not().isEmpty()
 ], validateRequest, async (req: Request, res: Response) => {
     const { orderId, token } = req.body;
-    console.log(req.body);
+    //console.log(req.body);
     const order = await Order.findById(orderId);
     if (!order) {
         return res.status(404).send({ errors: [{ message: 'oeder for the payment not found' }] });
