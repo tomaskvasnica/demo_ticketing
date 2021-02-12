@@ -6,7 +6,6 @@ export class TicketCreatedListener extends Listener<TickCreaEvt> {
     topic:Topics.TicketCreated = Topics.TicketCreated;
     async onMessage (data: TickCreaEvt['data'], msg: Message) {
         const {id, title, price} = data;
-        console.log('ticket:created listener: ', {id, title, price});
         await Ticket.build({ id, title, price}).save();
         msg.ack();
     };

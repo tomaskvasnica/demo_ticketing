@@ -16,10 +16,8 @@ router.post('/api/orders', requireAuth, [
 ], validateRequest ,async (req:Request, res:Response) => {
     //find ticket
     const {ticketId} = req.body;
-    console.log('{ticketId}: ', ticketId);
     const ticketFnd = await Ticket.findById(ticketId).exec();
     if (!ticketFnd) {
-        console.log(`ticket id: ${ticketId} not found`);
         return res.status(404).send({errors: [{message: 'Item not found'}]});
         //throw new NotFndError();
     }

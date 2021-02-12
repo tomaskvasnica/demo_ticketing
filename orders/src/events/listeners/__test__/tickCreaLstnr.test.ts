@@ -24,7 +24,6 @@ it(' creates and saves a ticket ', async ()=> {
     const {lstnr, data, msg} = await setup();
     await lstnr.onMessage(data, msg);
     const tick = await Ticket.findById(data.id);
-    console.log(tick);
     expect(Ticket).toBeDefined();
     expect(tick.title).toEqual(data.title);
     expect(tick.price).toEqual(data.price);

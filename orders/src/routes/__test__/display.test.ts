@@ -25,8 +25,4 @@ it('fetches orders for current user', async ()=> {
     const resp2 = await request(app).get('/api/orders').set('Cookie', global.cookie2()).send();
     console.log('order for user1: ', resp1.body);
     console.log('orders for user2: ', resp2.body);
-
-    // await request(app).delete(`/api/orders/${resp1.body[0].id}`).set('Cookie', global.cookie()).send();
-    // const resp3 = await request(app).get('/api/orders').set('Cookie', global.cookie()).send();
-    // console.log('orders for user1 - after order cancellation: ', resp3.body);
 });

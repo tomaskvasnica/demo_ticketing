@@ -10,7 +10,6 @@ router.get('/api/orders/:id', requireAuth, async (req:Request, res:Response) => 
         return res.status(404).send({errors: [{message: 'Item not found'}]});
     }
     if (ord.userId !== req.currentUser!.id) {
-        //console.log('about to returne 401 - unauthorized ');
         return res.status(401).send({errors: [{ message: 'You are not authorized to view this record ' }]});
     }
     res.send(ord);

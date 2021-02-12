@@ -48,7 +48,6 @@ it(' emits order cancelled message ', async() => {
     expect(natsWrapper.client.publish).toHaveBeenCalled();
     //console.log((natsWrapper.client.publish as jest.Mock).mock.calls[0][1]);
     const evtData = JSON.parse((natsWrapper.client.publish as jest.Mock).mock.calls[0][1] );
-    console.log('evtData', evtData);
     expect(evtData.id).toEqual(order.id);
 });
 
